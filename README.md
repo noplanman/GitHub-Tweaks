@@ -15,7 +15,9 @@ Simply choose the plugin that corresponds to your web browser below and download
   - **Opera**: Install the [ViolentMonkey](https://addons.opera.com/en/extensions/details/violent-monkey/) extension.
   - **Safari** & **Internet Explorer**: *NOT SUPPORTED!*
 
-2. GitHub Tweaks script can be found here
+2. GitHub Tweaks script can be found here (just choose any one)
+  - [Get it on OpenUserJS.org](https://openuserjs.org/install/noplanman/GitHub_Tweaks.user.js)
+  - [Get it on GreasyFork](https://greasyfork.org/en/scripts/20340-github-tweaks/code/GitHub_Tweaks.user.js)
   - [Get it on GitHub](https://raw.githubusercontent.com/noplanman/GitHub-Tweaks/master/GitHub_Tweaks.user.js)
 
 ##Details

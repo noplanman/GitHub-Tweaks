@@ -2,8 +2,6 @@
 
 Userscript that adds tweaks to GitHub.
 
----
-
 ##Installation
 
 GitHub Tweaks can be installed on a **PC**, or a **Mac**.
@@ -34,11 +32,22 @@ The `user1:master` and `user2:branch` placeholders are now links to the respecti
 
 (this applies to all `user:branch` placeholders wherever they appear)
 
-![Commit Ref Links](https://github.com/noplanman/GitHub-Tweaks/raw/master/assets/CommitRefLinks.png)
+![Commit Ref Links](assets/CommitRefLinks.png)
 
 ###Toggleable File Diffs
 
-When viewing the changed files of a PR, you can now collapse and expand the files by clicking the individual file headers.
+When viewing the changed files of a PR or branch comparison, you can now collapse and expand the files by clicking the individual file headers.
 Alternatively, you can collapse and expand all at the same time by clicking one of the new buttons at the top.
 
-![Toggleable File Diffs](https://github.com/noplanman/GitHub-Tweaks/raw/master/assets/ToggleableFileDiffs.png)
+![Toggleable File Diffs](assets/ToggleableFileDiffs.png)
+
+##Changelog
+
+###1.1
+
+- Change position of Toggleable File Diff buttons.
+- Add Toggleable File Diff buttons to branch compare.
+
+###1.0
+
+- First version, adding Commit Ref Links and Toggleable File Diffs.

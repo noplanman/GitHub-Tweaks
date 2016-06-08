@@ -3,7 +3,7 @@
 // @namespace   noplanman
 // @description Userscript that adds tweaks to GitHub.
 // @include     https://github.com*
-// @version     1.0
+// @version     1.1
 // @author      Armando Lüscher
 // @oujs:author noplanman
 // @copyright   2016 Armando Lüscher
@@ -90,38 +90,33 @@ GHT.addToggleableFileDiffs = function () {
   });
   console.log('addToggleableFileDiffs: ' + i);
 
-  if (jQuery('.GHT.diffbar-item').length) {
-    return;
-  }
-
   // When clicking the file actions, don't toggle the file contents.
   jQuery('.file-actions').click(function(event) {
     event.stopPropagation();
   });
 
-  // Add our buttons after the left-aligned items.
-  jQuery('.diffbar > .diffbar-item:last')
-  .after(
-    jQuery('<div/>', {
-      class: 'GHT diffbar-item'
-    })
-    .append(
-      // Fold / Collapse button.
-      jQuery('<div/>', {
-        class: 'btn btn-sm tooltipped tooltipped-s',
-        html:  GHT.octicon('fold')
-      })
-      .attr('aria-label', 'Collapse All')
-      .click(function() { $fhs.each(function () { jQuery(this).next().hide(); }); }),
-      // Unfold / Expand button.
-      jQuery('<div/>', {
-        class: 'btn btn-sm tooltipped tooltipped-s',
-        html:  GHT.octicon('unfold')
-      })
-      .attr('aria-label', 'Expand All')
-      .click(function() { $fhs.each(function () { jQuery(this).next().show(); }); })
-    )
-  );
+  if (jQuery('.GHT.btn-group').length) {
+    return;
+  }
+
+  var $fold_button = jQuery('<div/>', {html: GHT.octicon('fold'), class: 'btn btn-sm tooltipped tooltipped-s'})
+    .attr('aria-label', 'Collapse All')
+    .click(function() { $fhs.each(function () { jQuery(this).next().hide(); }); });
+
+  var $unfold_button = jQuery('<div/>', {html: GHT.octicon('unfold'), class: 'btn btn-sm tooltipped tooltipped-s'})
+    .attr('aria-label', 'Expand All')
+    .click(function() { $fhs.each(function () { jQuery(this).next().show(); }); });
+
+  var $fold_unfold_buttons = jQuery('<div/>', {class: 'GHT btn-group diffbar-item right'})
+    .append($fold_button, $unfold_button);
+
+  var $files_bucket = jQuery('#files_bucket');
+
+  // Add buttons to PR toolbar.
+  $files_bucket.find('.pr-toolbar .diffbar > .right').first().after($fold_unfold_buttons);
+
+  // Add buttons to compare toolbar.
+  $files_bucket.find('#diff .btn-group.right').first().after($fold_unfold_buttons);
 };
 
 /**

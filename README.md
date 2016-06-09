@@ -36,7 +36,7 @@ The `user1:master` and `user2:branch` placeholders are now links to the respecti
 
 ###Toggleable File Diffs
 
-When viewing the changed files of a PR or branch comparison, you can now collapse and expand the files by clicking the individual file headers.
+When viewing the changed files of a PR, branch comparison or a single commit, you can now collapse and expand the files by clicking the individual file headers.
 Alternatively, you can collapse and expand all at the same time by clicking one of the new buttons at the top.
 
 ![Toggleable File Diffs](assets/ToggleableFileDiffs.png)
@@ -49,6 +49,10 @@ Alternatively, you can collapse and expand all at the same time by clicking one 
 ![Toggleable Comments](assets/ToggleableComments.png)
 
 ##Changelog
+
+###2.1
+
+- Add Toggleable File Diff buttons when viewing a single commit
 
 ###2.0
 

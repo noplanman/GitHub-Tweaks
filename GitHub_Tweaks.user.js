@@ -3,7 +3,7 @@
 // @namespace   noplanman
 // @description Userscript that adds tweaks to GitHub.
 // @include     https://github.com*
-// @version     2.0
+// @version     2.1
 // @author      Armando Lüscher
 // @oujs:author noplanman
 // @copyright   2016 Armando Lüscher
@@ -73,8 +73,12 @@ GHT.addToggleableFileDiffs = function () {
   });
 
   if (!jQuery('.GHT.btn-group').length) {
-    // Add buttons to PR toolbar and compare toolbar.
-    jQuery('#files_bucket .pr-toolbar .diffbar > .right, #files_bucket #diff .btn-group.right')
+    // Add collapse / expand buttons...
+    jQuery(
+      '#files_bucket .pr-toolbar .diffbar > .right,' + // ...to PR toolbar.
+      '#files_bucket #diff .btn-group.right,' +        // ...to compare toolbar.
+      '#toc .btn-group.right'                          // ...to commit toolbar.
+    )
       .first()
       .after(GHT.getFoldUnfoldButtons($fhs.next(), 'diffbar-item right'));
   }

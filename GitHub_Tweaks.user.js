@@ -3,31 +3,161 @@
 // @namespace   noplanman
 // @description Userscript that adds tweaks to GitHub.
 // @include     https://github.com*
-// @version     1.1
+// @version     2.0
 // @author      Armando Lüscher
 // @oujs:author noplanman
 // @copyright   2016 Armando Lüscher
 // @grant       GM_addStyle
 // @require     https://code.jquery.com/jquery-1.12.4.min.js
-// @homepageURL https://github.com/noplanman/GitHubTweaks
-// @supportURL  https://github.com/noplanman/GitHubTweaks/issues
+// @homepageURL https://github.com/noplanman/GitHub-Tweaks
+// @supportURL  https://github.com/noplanman/GitHub-Tweaks/issues
 // ==/UserScript==
 
+/**
+ * Main GitHub Tweaks object.
+ *
+ * @type {Object}
+ */
 var GHT = {};
 
 /**
+ * Enable debug mode?
+ *
+ * @type {Boolean}
+ */
+GHT.debug = false;
+
+/**
+ * Turn commit references into links for easier access.
+ *
+ * e.g. <user1> wants to merge 1 commit into <user2>:develop from <user1>:branch
+ * Turn "<user2>:develop" and "<user1>:branch" into links.
+ */
+GHT.addCommitRefLinks = function () {
+  var i = 0;
+  jQuery('.commit-ref').not('.GHT').each(function () {
+    var $item = jQuery(this);
+    // Fix for commit-ref fields that are formatted differently (e.g. merged PR, at the bottom).
+    var $info = $item.find('.css-truncate-target').parent();
+    $item.replaceWith(
+      $('<a/>', {
+        'class' : 'GHT ' + ($info.attr('class') || 'commit-ref current-branch css-truncate user-select-contain expandable'),
+        'href'  : '/' + $info.attr('title').replace(':', '/tree/'),
+        'title' : $info.attr('title'),
+        'html'  : $info.html()
+      })
+    );
+    i++;
+  });
+  GHT.debug && console.log('addCommitRefLinks: ' + i);
+};
+
+/**
+ * Allow collapsing and expanding files in diff views.
+ */
+GHT.addToggleableFileDiffs = function () {
+  var i = 0;
+  var $fhs = jQuery('#files.diff-view .file-header').not('.GHT');
+  $fhs.each(function () {
+    var $f = jQuery(this).addClass('GHT');
+    $f.click(function() {
+      $f.next().toggle();
+    });
+    i++;
+  });
+  GHT.debug && console.log('addToggleableFileDiffs: ' + i);
+
+  // When clicking the file actions, don't toggle the file contents.
+  jQuery('.file-actions').click(function(event) {
+    event.stopPropagation();
+  });
+
+  if (!jQuery('.GHT.btn-group').length) {
+    // Add buttons to PR toolbar and compare toolbar.
+    jQuery('#files_bucket .pr-toolbar .diffbar > .right, #files_bucket #diff .btn-group.right')
+      .first()
+      .after(GHT.getFoldUnfoldButtons($fhs.next(), 'diffbar-item right'));
+  }
+};
+
+/**
+ * Allow collapsing and expanding of comments.
+ */
+GHT.addToggleableComments = function () {
+  var i = 0;
+  var $chs = jQuery('#discussion_bucket .timeline-comment-header').not('.GHT');
+  $chs.each(function () {
+    var $f = jQuery(this).addClass('GHT');
+    $f.click(function(event) {
+      if (!jQuery(event.target).closest('.timeline-comment-actions').length) {
+        GHT.sht($f.nextAll(), !$f.next(':visible').length);
+      } else if (jQuery(event.target).hasClass('js-comment-edit-button')) {
+        // Edit buttons shows the comment.
+        $f.nextAll('.comment-content').show();
+      } else if (jQuery(event.target).hasClass('timeline-comment-action')) {
+        // Add Reaction buttons shows the reactions.
+        $f.nextAll('.comment-reactions').show();
+      }
+    });
+    i++;
+  });
+  GHT.debug && console.log('addToggleableComments: ' + i);
+
+  // When clicking the comment header links, don't toggle the comment contents.
+  jQuery('.timeline-comment-header-text a').click(function(event) {
+    event.stopPropagation();
+  });
+
+  if (!jQuery('.GHT.btn-group').length) {
+    jQuery('.timeline-comment-actions')
+      .first()
+      .prepend(GHT.getFoldUnfoldButtons($chs.nextAll()));
+  }
+};
+
+/**
+ * Start the party.
+ */
+GHT.init = function () {
+  // Add the global CSS rules.
+  GM_addStyle(
+    '.GHT.commit-ref:hover { background-color: rgba(0,0,0,.1); background-image: none; text-shadow: none; cursor: pointer; }' +
+    '.GHT.user-select-contain { cursor: pointer !important; }'
+  );
+
+  // Load all the features.
+  GHT.Observer.add('body', [GHT.addCommitRefLinks, GHT.addToggleableFileDiffs, GHT.addToggleableComments]);
+};
+
+// source: https://muffinresearch.co.uk/does-settimeout-solve-the-domcontentloaded-problem/
+if (/(?!.*?compatible|.*?webkit)^mozilla|opera/i.test(navigator.userAgent)) { // Feeling dirty yet?
+  document.addEventListener('DOMContentLoaded', GHT.init, false);
+} else {
+  window.setTimeout(GHT.init, 0);
+}
+
+/************
+ * HELPERS! *
+ ************/
+
+/**
  * The MutationObserver to detect page changes.
+ *
+ * @type {Object}
  */
 GHT.Observer = {
-
-  // The mutation observer objects.
+  /**
+   * The mutation observer objects.
+   *
+   * @type {Array}
+   */
   observers : [],
 
   /**
    * Add an observer to observe for DOM changes.
    *
-   * @param {string}         queryToObserve Query string of elements to observe.
-   * @param {array|function} cbs            Callback function(s) for the observer.
+   * @param {String}         queryToObserve Query string of elements to observe.
+   * @param {Array|Function} cbs            Callback function(s) for the observer.
    */
   add : function(queryToObserve, cbs) {
     // Check if we can use the MutationObserver.
@@ -52,104 +182,90 @@ GHT.Observer = {
   }
 };
 
-
 /**
- * Turn commit references into links for easier access.
+ * Show / Hide / Toggle helper.
  *
- * e.g. <user1> wants to merge 1 commit into <user2>:develop from <user1>:branch
- * Turn "<user2>:develop" and "<user1>:branch" into links.
+ * @param {jQuery}            $s Object(s) to modify.
+ * @param {Boolean|undefined} s  State to set to (true=show, false=hide, undefined=toggle).
  */
-GHT.addCommitRefLinks = function () {
-  var i = 0;
-  jQuery('.commit-ref').not('.GHT').each(function () {
-    var $item = jQuery(this);
-    // Fix for commit-ref fields that are formatted differently (e.g. merged PR, at the bottom).
-    var $info = $item.find('.css-truncate-target').parent();
-    $item.replaceWith(
-      $('<a/>', {
-        'class' : 'GHT ' + ($info.attr('class') || 'commit-ref current-branch css-truncate user-select-contain expandable'),
-        'href'  : '/' + $info.attr('title').replace(':', '/tree/'),
-        'title' : $info.attr('title'),
-        'html'  : $info.html()
-      })
-    );
-    i++;
-  });
-  console.log('addCommitRefLinks: ' + i);
-};
-
-GHT.addToggleableFileDiffs = function () {
-  var i = 0;
-  var $fhs = jQuery('#files.diff-view .file-header').not('.GHT');
-  $fhs.each(function () {
-    var $f = jQuery(this).addClass('GHT');
-    $f.click(function() {
-      $f.next().toggle();
-    });
-    i++;
-  });
-  console.log('addToggleableFileDiffs: ' + i);
-
-  // When clicking the file actions, don't toggle the file contents.
-  jQuery('.file-actions').click(function(event) {
-    event.stopPropagation();
-  });
-
-  if (jQuery('.GHT.btn-group').length) {
-    return;
+GHT.sht = function($s, s) {
+  if (typeof s === 'undefined') {
+    $s.toggle();
+  } else {
+    if (s) {
+      $s.show();
+    } else {
+      $s.hide();
+    }
   }
-
-  var $fold_button = jQuery('<div/>', {html: GHT.octicon('fold'), class: 'btn btn-sm tooltipped tooltipped-s'})
-    .attr('aria-label', 'Collapse All')
-    .click(function() { $fhs.each(function () { jQuery(this).next().hide(); }); });
-
-  var $unfold_button = jQuery('<div/>', {html: GHT.octicon('unfold'), class: 'btn btn-sm tooltipped tooltipped-s'})
-    .attr('aria-label', 'Expand All')
-    .click(function() { $fhs.each(function () { jQuery(this).next().show(); }); });
-
-  var $fold_unfold_buttons = jQuery('<div/>', {class: 'GHT btn-group diffbar-item right'})
-    .append($fold_button, $unfold_button);
-
-  var $files_bucket = jQuery('#files_bucket');
-
-  // Add buttons to PR toolbar.
-  $files_bucket.find('.pr-toolbar .diffbar > .right').first().after($fold_unfold_buttons);
-
-  // Add buttons to compare toolbar.
-  $files_bucket.find('#diff .btn-group.right').first().after($fold_unfold_buttons);
 };
 
 /**
- * Start the party.
+ * Get a container with both the fold and unfold buttons.
+ *
+ * @param {jQuery} $items  Items to fold / unfold.
+ * @param {String} classes Class(es) to add to the container.
+ *
+ * @return {jQuery} Buttons container.
  */
-GHT.init = function () {
-  // Add the global CSS rules.
-  GM_addStyle(
-    '.GHT.commit-ref:hover { background-color: rgba(0,0,0,.1); background-image: none; text-shadow: none; cursor: pointer; }' +
-    '.GHT.user-select-contain { cursor: pointer !important; }'
-  );
-
-  // Load all the features.
-  GHT.Observer.add('body', [GHT.addCommitRefLinks, GHT.addToggleableFileDiffs]);
+GHT.getFoldUnfoldButtons = function($items, classes) {
+  return jQuery('<div/>', {class: 'GHT btn-group'})
+    .addClass(classes || '')
+    .append(
+      GHT.getFoldButton($items),
+      GHT.getUnfoldButton($items)
+    );
 };
 
-GHT.octicon = function(icon, height, width) {
-  icon   = icon || 'octoface';
-  height = height || 16;
-  width  = width || 16;
+/**
+ * Get fold button.
+ *
+ * @param {jQuery} $items Items to fold.
+ *
+ * @return {jQuery} The fold button.
+ */
+GHT.getFoldButton = function($items) {
+  return jQuery('<div/>', {html: GHT.getOcticon('fold'), class: 'btn btn-sm tooltipped tooltipped-s'})
+    .attr('aria-label', 'Collapse All')
+    .click(function() { $items.hide(); });
+};
 
+/**
+ * Get unfold button.
+ *
+ * @param {jQuery} $items Items to unfold.
+ *
+ * @return {jQuery} The unfold button.
+ */
+GHT.getUnfoldButton = function($items) {
+  return jQuery('<div/>', {html: GHT.getOcticon('unfold'), class: 'btn btn-sm tooltipped tooltipped-s'})
+    .attr('aria-label', 'Expand All')
+    .click(function() { $items.show(); });
+};
+
+/**
+ * Get svg element of octicon.
+ *
+ * @param {String}  icon   Icon name.
+ * @param {Number}  height Icon height to get.
+ * @param {Number}  width  Icon width to get.
+ *
+ * @return {String} Icon svg element as string.
+ */
+GHT.getOcticon = function(icon, height, width) {
+  icon   = icon   || 'octoface';
+  height = height || 16;
+  width  = width  || 16;
   return '<svg height="' + height + '" width="' + width + '" viewBox="' + GHT.octicons[icon].viewbox + '" class="octicon octicon-' + icon + '" version="1.1" aria-hidden="true">' + GHT.octicons[icon].path + '</svg>';
 };
 
-// source: https://muffinresearch.co.uk/does-settimeout-solve-the-domcontentloaded-problem/
-if (/(?!.*?compatible|.*?webkit)^mozilla|opera/i.test(navigator.userAgent)) { // Feeling dirty yet?
-  document.addEventListener('DOMContentLoaded', GHT.init, false);
-} else {
-  window.setTimeout(GHT.init, 0);
-}
-
-// All GitHub icon SVG paths.
-// https://raw.githubusercontent.com/primer/octicons/master/build/sprite.octicons.svg
+/**
+ * All GitHub icon SVG paths.
+ *
+ * https://raw.githubusercontent.com/primer/octicons/master/build/sprite.octicons.svg
+ *
+ * @type {Object}
+ */
 GHT.octicons =  {
   'alert' : { 'viewbox' : '0 0 16 16', 'path' : '<path d="M8.865 1.52c-.18-.31-.51-.5-.87-.5s-.69.19-.87.5L.275 13.5c-.18.31-.18.69 0 1 .19.31.52.5.87.5h13.7c.36 0 .69-.19.86-.5.17-.31.18-.69.01-1L8.865 1.52zM8.995 13h-2v-2h2v2zm0-3h-2V6h2v4z" fill-rule="evenodd"/>' },
   'arrow-down' : { 'viewbox' : '0 0 10 16', 'path' : '<path d="M7 7V3H3v4H0l5 6 5-6z" fill-rule="evenodd"/>' },

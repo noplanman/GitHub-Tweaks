@@ -41,13 +41,25 @@ Alternatively, you can collapse and expand all at the same time by clicking one 
 
 ![Toggleable File Diffs](assets/ToggleableFileDiffs.png)
 
+###Toggleable Comments
+
+When viewing a conversation of an issue or PR, you can now collapse and expand the comments by clicking the individual comment headers.
+Alternatively, you can collapse and expand all at the same time by clicking one of the new buttons in the topmost comment header.
+
+![Toggleable Comments](assets/ToggleableComments.png)
+
 ##Changelog
+
+###2.0
+
+- Add Toggleable Comments
+- Code rewrite / restructure
 
 ###1.1
 
-- Change position of Toggleable File Diff buttons.
-- Add Toggleable File Diff buttons to branch compare.
+- Change position of Toggleable File Diff buttons
+- Add Toggleable File Diff buttons to branch compare
 
 ###1.0
 
-- First version, adding Commit Ref Links and Toggleable File Diffs.
+- First version, adding Commit Ref Links and Toggleable File Diffs

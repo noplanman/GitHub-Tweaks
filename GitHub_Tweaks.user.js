@@ -3,7 +3,7 @@
 // @namespace   noplanman
 // @description Userscript that adds tweaks to GitHub.
 // @include     https://github.com*
-// @version     2.1
+// @version     2.2
 // @author      Armando Lüscher
 // @oujs:author noplanman
 // @copyright   2016 Armando Lüscher
@@ -35,21 +35,26 @@ GHT.debug = false;
  */
 GHT.addCommitRefLinks = function () {
   var i = 0;
+  var s = 0;
   jQuery('.commit-ref').not('.GHT').each(function () {
     var $item = jQuery(this);
     // Fix for commit-ref fields that are formatted differently (e.g. merged PR, at the bottom).
     var $info = $item.find('.css-truncate-target').parent();
-    $item.replaceWith(
-      $('<a/>', {
-        'class' : 'GHT ' + ($info.attr('class') || 'commit-ref current-branch css-truncate user-select-contain expandable'),
-        'href'  : '/' + $info.attr('title').replace(':', '/tree/'),
-        'title' : $info.attr('title'),
-        'html'  : $info.html()
-      })
-    );
+    if ($info.length) {
+      $item.replaceWith(
+        $('<a/>', {
+          'class' : 'GHT ' + ($info.attr('class') || 'commit-ref current-branch css-truncate user-select-contain expandable'),
+          'href'  : '/' + $info.attr('title').replace(':', '/tree/'),
+          'title' : $info.attr('title'),
+          'html'  : $info.html()
+        })
+      );
+    } else {
+      s++;
+    }
     i++;
   });
-  GHT.debug && console.log('addCommitRefLinks: ' + i);
+  GHT.debug && console.log('addCommitRefLinks: ' + i + ' (' + s + ' skipped)');
 };
 
 /**

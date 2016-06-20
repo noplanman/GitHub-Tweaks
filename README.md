@@ -50,6 +50,10 @@ Alternatively, you can collapse and expand all at the same time by clicking one 
 
 ##Changelog
 
+###2.2
+
+- Fix Commit Ref Links for unknown repositories.
+
 ###2.1
 
 - Add Toggleable File Diff buttons when viewing a single commit

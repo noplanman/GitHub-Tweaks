@@ -94,7 +94,7 @@ GHT.addToggleableFileDiffs = function () {
  */
 GHT.addToggleableComments = function () {
   var i = 0;
-  var $chs = jQuery('#discussion_bucket .timeline-comment-header').not('.GHT');
+  var $chs = jQuery('.timeline-comment-header').not('.GHT');
   $chs.each(function () {
     var $f = jQuery(this).addClass('GHT');
     $f.click(function(event) {

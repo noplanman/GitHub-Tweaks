@@ -87,7 +87,7 @@ GHT.addToggleableFileDiffs = function () {
       '#toc .btn-group.right'                          // ...to commit toolbar.
     )
       .first()
-      .after(GHT.getFoldUnfoldButtons($fhs.next(), 'diffbar-item right'));
+      .after(GHT.getFoldUnfoldButtons($fhs.next(), 'diffbar-item right', 's'));
   }
 };
 
@@ -107,6 +107,9 @@ GHT.addToggleableComments = function () {
 
     // Set the mouse hover title of the header to the comment body to easily browse folded comments.
     $f.attr('title', $f.next('.comment-content').find('.edit-comment-hide .comment-body').text().trim());
+    // Add north-oriented tooltips to all reaction buttons.
+    GHT.tooltipify($f.find('.timeline-comment-actions button'), 'n');
+
     $f.click(function(event) {
       if (!jQuery(event.target).closest('.timeline-comment-actions').length) {
         GHT.sht($f.nextAll(), !$f.next(':visible').length);
@@ -126,7 +129,7 @@ GHT.addToggleableComments = function () {
   if (!jQuery('.GHT.btn-group').length) {
     jQuery('.timeline-comment-actions')
       .first()
-      .prepend(GHT.getFoldUnfoldButtons($chs.nextAll()));
+      .prepend(GHT.getFoldUnfoldButtons($chs.nextAll(), '', 'n'));
   }
 };
 
@@ -217,19 +220,45 @@ GHT.sht = function($s, s) {
 };
 
 /**
+ * Add a pretty tooltip to the passed items.
+ *
+ * @param  {jQuery} $items Items to tooltipify.
+ * @param  {String} ttdir  Direction of the tooltip.
+ * @param  {String} title  Static title to override current values.
+ */
+GHT.tooltipify = function($items, ttdir, title) {
+  ttdir = ttdir ? (' tooltipped-' + ttdir) : '';
+  title = title || '';
+
+  $items.each(function() {
+    var $t = jQuery(this).addClass('tooltipped' + ttdir);
+
+    // Override title text?
+    if (title === '' && !$t.attr('aria-title') && $t.attr('title')) {
+      title = $t.attr('title');
+    }
+
+    $t.attr('aria-label', title);
+    $t.attr('title', '');
+  });
+};
+
+/**
  * Get a container with both the fold and unfold buttons.
  *
  * @param {jQuery} $items  Items to fold / unfold.
  * @param {String} classes Class(es) to add to the container.
+ * @param {String} ttdir   Direction of the tooptip.
  *
  * @return {jQuery} Buttons container.
  */
-GHT.getFoldUnfoldButtons = function($items, classes) {
+GHT.getFoldUnfoldButtons = function($items, classes, ttdir) {
+  ttdir = ttdir ? ('tooltipped-' + ttdir) : '';
   return jQuery('<div/>', {class: 'GHT btn-group'})
     .addClass(classes || '')
     .append(
-      GHT.getFoldButton($items),
-      GHT.getUnfoldButton($items)
+      GHT.getFoldButton($items).addClass(ttdir),
+      GHT.getUnfoldButton($items).addClass(ttdir)
     );
 };
 
@@ -241,7 +270,7 @@ GHT.getFoldUnfoldButtons = function($items, classes) {
  * @return {jQuery} The fold button.
  */
 GHT.getFoldButton = function($items) {
-  return jQuery('<div/>', {html: GHT.getOcticon('fold'), class: 'btn btn-sm tooltipped tooltipped-s'})
+  return jQuery('<div/>', {html: GHT.getOcticon('fold'), class: 'btn btn-sm tooltipped'})
     .attr('aria-label', 'Collapse All')
     .click(function() { $items.hide(); });
 };
@@ -254,7 +283,7 @@ GHT.getFoldButton = function($items) {
  * @return {jQuery} The unfold button.
  */
 GHT.getUnfoldButton = function($items) {
-  return jQuery('<div/>', {html: GHT.getOcticon('unfold'), class: 'btn btn-sm tooltipped tooltipped-s'})
+  return jQuery('<div/>', {html: GHT.getOcticon('unfold'), class: 'btn btn-sm tooltipped'})
     .attr('aria-label', 'Expand All')
     .click(function() { $items.show(); });
 };

@@ -104,6 +104,9 @@ GHT.addToggleableComments = function () {
     $f.find('.timeline-comment-header-text a').click(function(event) {
       event.stopPropagation();
     });
+
+    // Set the mouse hover title of the header to the comment body to easily browse folded comments.
+    $f.attr('title', $f.next('.comment-content').find('.edit-comment-hide .comment-body').text().trim());
     $f.click(function(event) {
       if (!jQuery(event.target).closest('.timeline-comment-actions').length) {
         GHT.sht($f.nextAll(), !$f.next(':visible').length);

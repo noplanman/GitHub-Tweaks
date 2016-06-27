@@ -141,6 +141,8 @@ GHT.addToggleableComments = function () {
  * Start the party.
  */
 GHT.init = function () {
+  GHT.initCustomTriggers();
+
   // Add the global CSS rules.
   GM_addStyle(
     '.GHT.commit-ref:hover { background-color: rgba(0,0,0,.1); background-image: none; text-shadow: none; cursor: pointer; }' +
@@ -488,4 +490,19 @@ GHT.octicons =  {
   'watch' : { 'viewbox' : '0 0 12 16', 'path' : '<path d="M6 8h2v1H5V5h1v3zm6 0c0 2.22-1.2 4.16-3 5.19V15c0 .55-.45 1-1 1H4c-.55 0-1-.45-1-1v-1.81C1.2 12.16 0 10.22 0 8s1.2-4.16 3-5.19V1c0-.55.45-1 1-1h4c.55 0 1 .45 1 1v1.81c1.8 1.03 3 2.97 3 5.19zm-1 0c0-2.77-2.23-5-5-5S1 5.23 1 8s2.23 5 5 5 5-2.23 5-5z" fill-rule="evenodd"/>' },
   'x' : { 'viewbox' : '0 0 12 16', 'path' : '<path d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48z" fill-rule="evenodd"/>' },
   'zap' : { 'viewbox' : '0 0 10 16', 'path' : '<path d="M10 7H6l3-7-9 9h4l-3 7z" fill-rule="evenodd"/>' },
+};
+
+/**
+ * Allow custom execution of internal triggers "show" and "hide".
+ *
+ * source: http://viralpatel.net/blogs/jquery-trigger-custom-event-show-hide-element/
+ */
+GHT.initCustomTriggers = function() {
+  jQuery.each(['show', 'hide'], function (i, ev) {
+    var el = jQuery.fn[ev];
+    jQuery.fn[ev] = function () {
+      this.trigger(ev);
+      return el.apply(this, arguments);
+    };
+  });
 };

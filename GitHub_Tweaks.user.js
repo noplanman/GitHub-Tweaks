@@ -65,17 +65,19 @@ GHT.addToggleableFileDiffs = function () {
   var $fhs = jQuery('#files.diff-view .file-header').not('.GHT');
   $fhs.each(function () {
     var $f = jQuery(this).addClass('GHT');
+
+    // When clicking the file actions, don't toggle the file contents.
+    $f.find('.file-actions').click(function(event) {
+      event.stopPropagation();
+    });
+
     $f.click(function() {
       $f.next().toggle();
     });
+
     i++;
   });
   GHT.debug && console.log('addToggleableFileDiffs: ' + i);
-
-  // When clicking the file actions, don't toggle the file contents.
-  jQuery('.file-actions').click(function(event) {
-    event.stopPropagation();
-  });
 
   if (!jQuery('.GHT.btn-group').length) {
     // Add collapse / expand buttons...
@@ -97,6 +99,11 @@ GHT.addToggleableComments = function () {
   var $chs = jQuery('.timeline-comment-header').not('.GHT');
   $chs.each(function () {
     var $f = jQuery(this).addClass('GHT');
+
+    // When clicking the comment header links, don't toggle the comment contents.
+    $f.find('.timeline-comment-header-text a').click(function(event) {
+      event.stopPropagation();
+    });
     $f.click(function(event) {
       if (!jQuery(event.target).closest('.timeline-comment-actions').length) {
         GHT.sht($f.nextAll(), !$f.next(':visible').length);
@@ -108,14 +115,10 @@ GHT.addToggleableComments = function () {
         $f.nextAll('.comment-reactions').show();
       }
     });
+
     i++;
   });
   GHT.debug && console.log('addToggleableComments: ' + i);
-
-  // When clicking the comment header links, don't toggle the comment contents.
-  jQuery('.timeline-comment-header-text a').click(function(event) {
-    event.stopPropagation();
-  });
 
   if (!jQuery('.GHT.btn-group').length) {
     jQuery('.timeline-comment-actions')

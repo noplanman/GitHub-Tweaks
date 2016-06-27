@@ -106,7 +106,7 @@ GHT.addToggleableComments = function () {
     });
 
     // Set the mouse hover title of the header to the comment body to easily browse folded comments.
-    var content = $f.next('.comment-content').find('.edit-comment-hide .comment-body > p').text().trim();
+    var content = $f.next('.comment-content').find('.edit-comment-hide .comment-body').text().trim();
     var content_slice = content.slice(0, 111);
     GHT.tooltipify($f, 's', content_slice + ((content > content_slice) ? '...' : ''));
     // Don't show tooltip yet, only when content is hidden!

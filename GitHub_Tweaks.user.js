@@ -184,7 +184,8 @@ GHT.Observer = {
 
           // Observe child changes.
           mo.observe(toObserve, {
-            childList: true
+            childList: true,
+            subtree: true
           });
 
           GHT.Observer.observers.push(mo);

@@ -3,7 +3,7 @@
 // @namespace   noplanman
 // @description Userscript that adds tweaks to GitHub.
 // @include     https://github.com*
-// @version     2.2
+// @version     2.3
 // @author      Armando Lüscher
 // @oujs:author noplanman
 // @copyright   2016 Armando Lüscher
@@ -124,10 +124,10 @@ GHT.addToggleableComments = function () {
       if (!jQuery(event.target).closest('.timeline-comment-actions').length) {
         GHT.sht($f.nextAll(), !$f.next(':visible').length);
       } else if (jQuery(event.target).hasClass('js-comment-edit-button')) {
-        // Edit buttons shows the comment.
+        // Edit button shows the comment.
         $f.nextAll('.comment-content').show();
       } else if (jQuery(event.target).hasClass('timeline-comment-action')) {
-        // Add Reaction buttons shows the reactions.
+        // Add Reaction button shows the reactions.
         $f.nextAll('.comment-reactions').show();
       }
     });

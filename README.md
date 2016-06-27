@@ -45,10 +45,17 @@ Alternatively, you can collapse and expand all at the same time by clicking one 
 
 When viewing a conversation of an issue or PR, you can now collapse and expand the comments by clicking the individual comment headers.
 Alternatively, you can collapse and expand all at the same time by clicking one of the new buttons in the topmost comment header.
+For hidden comments, the first part of the content gets added to the comment header as a tooltip.
 
 ![Toggleable Comments](assets/ToggleableComments.png)
 
 ##Changelog
+
+###2.3
+
+- Refresh tweaks on page content change, so that new inline comments instantly become toggleable.
+- Add content tooltip to comment header when content is collapsed.
+- Add missing tooltips to comment action buttons.
 
 ###2.2
 

@@ -106,7 +106,11 @@ GHT.addToggleableComments = function () {
     });
 
     // Set the mouse hover title of the header to the comment body to easily browse folded comments.
-    $f.attr('title', $f.next('.comment-content').find('.edit-comment-hide .comment-body').text().trim());
+    var content_text = $f.next('.comment-content').find('.edit-comment-hide .comment-body > p').text().trim();
+    var content_text_slice = content_text.slice(0, 111);
+    $f.addClass('tooltipped tooltipped-s');
+    $f.attr('aria-label', content_text_slice + ((content_text > content_text_slice) ? '...' : ''));
+
     // Add north-oriented tooltips to all reaction buttons.
     GHT.tooltipify($f.find('.timeline-comment-actions button'), 'n');
 

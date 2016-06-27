@@ -238,8 +238,11 @@ GHT.tooltipify = function($items, ttdir, title) {
     var $t = jQuery(this).addClass('tooltipped' + ttdir);
 
     // Override title text?
-    if (title === '' && !$t.attr('aria-title') && $t.attr('title')) {
-      title = $t.attr('title');
+    if (title === '') {
+      title = $t.attr('aria-title');
+      if (!$t.attr('aria-title') && $t.attr('title')) {
+        title = $t.attr('title');
+      }
     }
 
     $t.attr('aria-label', title);

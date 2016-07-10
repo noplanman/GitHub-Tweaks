@@ -3,7 +3,7 @@
 // @namespace   noplanman
 // @description Userscript that adds tweaks to GitHub.
 // @include     https://github.com*
-// @version     2.3
+// @version     2.4
 // @author      Armando Lüscher
 // @oujs:author noplanman
 // @copyright   2016 Armando Lüscher
@@ -144,6 +144,27 @@ GHT.addToggleableComments = function () {
 };
 
 /**
+ * Turn pull info labels on the dashboard into links that link to the PR files tab.
+ */
+GHT.addPullInfoLinks = function () {
+  var i = 0;
+  jQuery('.pull-info').not('.GHT').each(function () {
+    var $item = jQuery(this);
+    var link = $item.closest('.details').siblings('.title').find('a[data-ga-click*="target:pull"]').attr('href') + '/files';
+
+    $item.replaceWith(
+      $('<a/>', {
+        'class' : 'pull-info GHT',
+        'href'  : link,
+        'html'  : $item.html()
+      })
+    );
+    i++;
+  });
+  GHT.debug && console.log('addPullInfoLinks: ' + i);
+};
+
+/**
  * Start the party.
  */
 GHT.init = function () {
@@ -151,12 +172,12 @@ GHT.init = function () {
 
   // Add the global CSS rules.
   GM_addStyle(
-    '.GHT.commit-ref:hover { background-color: rgba(0,0,0,.1); background-image: none; text-shadow: none; cursor: pointer; }' +
+    '.GHT.commit-ref:hover, .GHT.pull-info:hover { background-color: rgba(0,0,0,.1); background-image: none; text-shadow: none; cursor: pointer; text-decoration: none; }' +
     '.GHT.user-select-contain { cursor: pointer !important; }'
   );
 
   // Load all the features.
-  GHT.Observer.add('body', [GHT.addCommitRefLinks, GHT.addToggleableFileDiffs, GHT.addToggleableComments]);
+  GHT.Observer.add('body', [GHT.addCommitRefLinks, GHT.addToggleableFileDiffs, GHT.addToggleableComments, GHT.addPullInfoLinks]);
 };
 
 // source: https://muffinresearch.co.uk/does-settimeout-solve-the-domcontentloaded-problem/

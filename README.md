@@ -34,6 +34,12 @@ The `user1:master` and `user2:branch` placeholders are now links to the respecti
 
 ![Commit Ref Links](assets/CommitRefLinks.png)
 
+###Pull Info Links
+
+On the dashboard, the pull info fields are now linked to the PR's "Files changed" tab for quick access.
+
+![Pull Info Links](assets/PullInfoLinks.png)
+
 ###Toggleable File Diffs
 
 When viewing the changed files of a PR, branch comparison or a single commit, you can now collapse and expand the files by clicking the individual file headers.
@@ -50,6 +56,10 @@ For hidden comments, the first part of the content gets added to the comment hea
 ![Toggleable Comments](assets/ToggleableComments.png)
 
 ##Changelog
+
+###2.4
+
+- Add Pull Info Links on dashboard.
 
 ###2.3
 

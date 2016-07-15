@@ -57,6 +57,10 @@ For hidden comments, the first part of the content gets added to the comment hea
 
 ##Changelog
 
+###2.4.1
+
+- Fix for class rename on GitHub.
+
 ###2.4
 
 - Add Pull Info Links on dashboard.
@@ -73,18 +77,18 @@ For hidden comments, the first part of the content gets added to the comment hea
 
 ###2.1
 
-- Add Toggleable File Diff buttons when viewing a single commit
+- Add Toggleable File Diff buttons when viewing a single commit.
 
 ###2.0
 
-- Add Toggleable Comments
-- Code rewrite / restructure
+- Add Toggleable Comments.
+- Code rewrite / restructure.
 
 ###1.1
 
-- Change position of Toggleable File Diff buttons
-- Add Toggleable File Diff buttons to branch compare
+- Change position of Toggleable File Diff buttons.
+- Add Toggleable File Diff buttons to branch compare.
 
 ###1.0
 
-- First version, adding Commit Ref Links and Toggleable File Diffs
+- First version, adding Commit Ref Links and Toggleable File Diffs.

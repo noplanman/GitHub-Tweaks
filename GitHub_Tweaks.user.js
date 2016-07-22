@@ -3,7 +3,7 @@
 // @namespace   noplanman
 // @description Userscript that adds tweaks to GitHub.
 // @include     https://github.com*
-// @version     2.4.1
+// @version     2.5
 // @author      Armando Lüscher
 // @oujs:author noplanman
 // @copyright   2016 Armando Lüscher
@@ -62,17 +62,18 @@ GHT.addCommitRefLinks = function () {
  */
 GHT.addToggleableFileDiffs = function () {
   var i = 0;
-  var $fhs = jQuery('#files.diff-view .file-header').not('.GHT');
-  $fhs.each(function () {
-    var $f = jQuery(this).addClass('GHT');
+  var $file_headers = jQuery('#files.diff-view .file-header').not('.GHT');
+  $file_headers.each(function () {
+    var $file_header = jQuery(this).addClass('GHT');
+    $file_header.next().addClass('foldable-file-diff');
 
     // When clicking the file actions, don't toggle the file contents.
-    $f.find('.file-actions').click(function(event) {
+    $file_header.find('.file-actions').click(function(event) {
       event.stopPropagation();
     });
 
-    $f.click(function() {
-      $f.next().toggle();
+    $file_header.click(function() {
+      $file_header.next().toggle();
     });
 
     i++;
@@ -87,7 +88,7 @@ GHT.addToggleableFileDiffs = function () {
       '#toc .btn-group.right'                                // ...to commit toolbar.
     )
       .first()
-      .after(GHT.getFoldUnfoldButtons($fhs.next(), 'diffbar-item right', 's'));
+      .after(GHT.getFoldUnfoldButtons('.foldable-file-diff', 'diffbar-item right', 's'));
   }
 };
 
@@ -96,39 +97,41 @@ GHT.addToggleableFileDiffs = function () {
  */
 GHT.addToggleableComments = function () {
   var i = 0;
-  var $chs = jQuery('.timeline-comment-header').not('.GHT');
-  $chs.each(function () {
-    var $f = jQuery(this).addClass('GHT');
+  var $comment_headers = jQuery('.timeline-comment-header').not('.GHT');
+  $comment_headers.each(function () {
+    var $comment_header = jQuery(this).addClass('GHT');
+    $comment_header.next().addClass('foldable-comment');
 
     // When clicking the comment header links, don't toggle the comment contents.
-    $f.find('.timeline-comment-header-text a').click(function(event) {
+    $comment_header.find('.timeline-comment-header-text a').click(function(event) {
       event.stopPropagation();
     });
 
     // Set the mouse hover title of the header to the comment body to easily browse folded comments.
-    var content = $f.next('.comment-content').find('.edit-comment-hide .comment-body').text().trim();
+    var content = $comment_header.next('.comment-content').find('.edit-comment-hide .comment-body').text().trim();
     var content_slice = content.slice(0, 111);
-    GHT.tooltipify($f, 's', content_slice + ((content > content_slice) ? '...' : ''));
+    GHT.tooltipify($comment_header, 's', content_slice + ((content > content_slice) ? '...' : ''));
     // Don't show tooltip yet, only when content is hidden!
-    $f.removeClass('tooltipped');
+    $comment_header.removeClass('tooltipped');
 
     // Show/hide the content tooltip in the header.
-    $f.next('.comment-content')
-      .on('show', function() { $f.removeClass('tooltipped'); })
-      .on('hide', function() { $f.addClass('tooltipped'); });
+    $comment_header.next('.comment-content')
+      .on('show', function() { $comment_header.removeClass('tooltipped'); })
+      .on('hide', function() { $comment_header.addClass('tooltipped'); });
 
     // Add north-oriented tooltips to all reaction buttons.
-    GHT.tooltipify($f.find('.timeline-comment-actions button'), 'n');
+    GHT.tooltipify($comment_header.find('.timeline-comment-actions button'), 'n');
 
-    $f.click(function(event) {
+    $comment_header.click(function(event) {
       if (!jQuery(event.target).closest('.timeline-comment-actions').length) {
-        GHT.sht($f.nextAll(), !$f.next(':visible').length);
+        // Comment header toggles the comment.
+        GHT.toggleShowHide($comment_header.nextAll(), !$comment_header.next(':visible').length);
       } else if (jQuery(event.target).hasClass('js-comment-edit-button')) {
         // Edit button shows the comment.
-        $f.nextAll('.comment-content').show();
+        $comment_header.nextAll('.comment-content').show();
       } else if (jQuery(event.target).hasClass('timeline-comment-action')) {
         // Add Reaction button shows the reactions.
-        $f.nextAll('.comment-reactions').show();
+        $comment_header.nextAll('.comment-reactions').show();
       }
     });
 
@@ -139,7 +142,7 @@ GHT.addToggleableComments = function () {
   if (!jQuery('.GHT.btn-group').length) {
     jQuery('.timeline-comment-actions')
       .first()
-      .prepend(GHT.getFoldUnfoldButtons($chs.nextAll(), '', 'n'));
+      .prepend(GHT.getFoldUnfoldButtons('.foldable-comment, .comment-reactions', '', 'n'));
   }
 };
 
@@ -149,14 +152,14 @@ GHT.addToggleableComments = function () {
 GHT.addPullInfoLinks = function () {
   var i = 0;
   jQuery('.pull-info').not('.GHT').each(function () {
-    var $item = jQuery(this);
-    var link = $item.closest('.details').siblings('.title').find('a[data-ga-click*="target:pull"]').attr('href') + '/files';
+    var $info_item = jQuery(this);
+    var link = $info_item.closest('.details').siblings('.title').find('a[data-ga-click*="target:pull"]').attr('href') + '/files';
 
-    $item.replaceWith(
+    $info_item.replaceWith(
       $('<a/>', {
         'class' : 'pull-info GHT',
         'href'  : link,
-        'html'  : $item.html()
+        'html'  : $info_item.html()
       })
     );
     i++;
@@ -237,18 +240,14 @@ GHT.Observer = {
 /**
  * Show / Hide / Toggle helper.
  *
- * @param {jQuery}            $s Object(s) to modify.
- * @param {Boolean|undefined} s  State to set to (true=show, false=hide, undefined=toggle).
+ * @param {jQuery}            $objects Object(s) to modify.
+ * @param {Boolean|undefined} state    State to set to (true=show, false=hide, undefined=toggle).
  */
-GHT.sht = function($s, s) {
-  if (typeof s === 'undefined') {
-    $s.toggle();
-  } else {
-    if (s) {
-      $s.show();
-    } else {
-      $s.hide();
-    }
+GHT.toggleShowHide = function($objects, state) {
+  switch(state) {
+    case true:  $objects.show(); break;
+    case false: $objects.hide(); break;
+    default:    $objects.toggle();
   }
 };
 
@@ -282,46 +281,46 @@ GHT.tooltipify = function($items, ttdir, title) {
 /**
  * Get a container with both the fold and unfold buttons.
  *
- * @param {jQuery} $items  Items to fold / unfold.
- * @param {String} classes Class(es) to add to the container.
- * @param {String} ttdir   Direction of the tooptip.
+ * @param {String} selector Selector for items to fold / unfold.
+ * @param {String} classes  Class(es) to add to the container.
+ * @param {String} ttdir    Direction of the tooptip.
  *
  * @return {jQuery} Buttons container.
  */
-GHT.getFoldUnfoldButtons = function($items, classes, ttdir) {
+GHT.getFoldUnfoldButtons = function(selector, classes, ttdir) {
   ttdir = ttdir ? ('tooltipped-' + ttdir) : '';
   return jQuery('<div/>', {class: 'GHT btn-group'})
     .addClass(classes || '')
     .append(
-      GHT.getFoldButton($items).addClass(ttdir),
-      GHT.getUnfoldButton($items).addClass(ttdir)
+      GHT.getFoldButton(selector).addClass(ttdir),
+      GHT.getUnfoldButton(selector).addClass(ttdir)
     );
 };
 
 /**
  * Get fold button.
  *
- * @param {jQuery} $items Items to fold.
+ * @param {String} selector Selector for items to fold / unfold.
  *
  * @return {jQuery} The fold button.
  */
-GHT.getFoldButton = function($items) {
+GHT.getFoldButton = function(selector) {
   return jQuery('<div/>', {html: GHT.getOcticon('fold'), class: 'btn btn-sm tooltipped'})
     .attr('aria-label', 'Collapse All')
-    .click(function() { $items.hide(); });
+    .click(function() { jQuery(selector).hide(); });
 };
 
 /**
  * Get unfold button.
  *
- * @param {jQuery} $items Items to unfold.
+ * @param {String} selector Selector for items to fold / unfold.
  *
  * @return {jQuery} The unfold button.
  */
-GHT.getUnfoldButton = function($items) {
+GHT.getUnfoldButton = function(selector) {
   return jQuery('<div/>', {html: GHT.getOcticon('unfold'), class: 'btn btn-sm tooltipped'})
     .attr('aria-label', 'Expand All')
-    .click(function() { $items.show(); });
+    .click(function() { jQuery(selector).show(); });
 };
 
 /**

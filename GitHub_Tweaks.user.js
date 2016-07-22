@@ -62,18 +62,18 @@ GHT.addCommitRefLinks = function () {
  */
 GHT.addToggleableFileDiffs = function () {
   var i = 0;
-  var $fhs = jQuery('#files.diff-view .file-header').not('.GHT');
-  $fhs.each(function () {
-    var $f = jQuery(this).addClass('GHT');
-    $f.next().addClass('foldable-file-diff');
+  var $file_headers = jQuery('#files.diff-view .file-header').not('.GHT');
+  $file_headers.each(function () {
+    var $file_header = jQuery(this).addClass('GHT');
+    $file_header.next().addClass('foldable-file-diff');
 
     // When clicking the file actions, don't toggle the file contents.
-    $f.find('.file-actions').click(function(event) {
+    $file_header.find('.file-actions').click(function(event) {
       event.stopPropagation();
     });
 
-    $f.click(function() {
-      $f.next().toggle();
+    $file_header.click(function() {
+      $file_header.next().toggle();
     });
 
     i++;
@@ -97,40 +97,41 @@ GHT.addToggleableFileDiffs = function () {
  */
 GHT.addToggleableComments = function () {
   var i = 0;
-  var $chs = jQuery('.timeline-comment-header').not('.GHT');
-  $chs.each(function () {
-    var $f = jQuery(this).addClass('GHT');
-    $f.next().addClass('foldable-comment');
+  var $comment_headers = jQuery('.timeline-comment-header').not('.GHT');
+  $comment_headers.each(function () {
+    var $comment_header = jQuery(this).addClass('GHT');
+    $comment_header.next().addClass('foldable-comment');
 
     // When clicking the comment header links, don't toggle the comment contents.
-    $f.find('.timeline-comment-header-text a').click(function(event) {
+    $comment_header.find('.timeline-comment-header-text a').click(function(event) {
       event.stopPropagation();
     });
 
     // Set the mouse hover title of the header to the comment body to easily browse folded comments.
-    var content = $f.next('.comment-content').find('.edit-comment-hide .comment-body').text().trim();
+    var content = $comment_header.next('.comment-content').find('.edit-comment-hide .comment-body').text().trim();
     var content_slice = content.slice(0, 111);
-    GHT.tooltipify($f, 's', content_slice + ((content > content_slice) ? '...' : ''));
+    GHT.tooltipify($comment_header, 's', content_slice + ((content > content_slice) ? '...' : ''));
     // Don't show tooltip yet, only when content is hidden!
-    $f.removeClass('tooltipped');
+    $comment_header.removeClass('tooltipped');
 
     // Show/hide the content tooltip in the header.
-    $f.next('.comment-content')
-      .on('show', function() { $f.removeClass('tooltipped'); })
-      .on('hide', function() { $f.addClass('tooltipped'); });
+    $comment_header.next('.comment-content')
+      .on('show', function() { $comment_header.removeClass('tooltipped'); })
+      .on('hide', function() { $comment_header.addClass('tooltipped'); });
 
     // Add north-oriented tooltips to all reaction buttons.
-    GHT.tooltipify($f.find('.timeline-comment-actions button'), 'n');
+    GHT.tooltipify($comment_header.find('.timeline-comment-actions button'), 'n');
 
-    $f.click(function(event) {
+    $comment_header.click(function(event) {
       if (!jQuery(event.target).closest('.timeline-comment-actions').length) {
-        GHT.sht($f.nextAll(), !$f.next(':visible').length);
+        // Comment header toggles the comment.
+        GHT.toggleShowHide($comment_header.nextAll(), !$comment_header.next(':visible').length);
       } else if (jQuery(event.target).hasClass('js-comment-edit-button')) {
         // Edit button shows the comment.
-        $f.nextAll('.comment-content').show();
+        $comment_header.nextAll('.comment-content').show();
       } else if (jQuery(event.target).hasClass('timeline-comment-action')) {
         // Add Reaction button shows the reactions.
-        $f.nextAll('.comment-reactions').show();
+        $comment_header.nextAll('.comment-reactions').show();
       }
     });
 
@@ -151,14 +152,14 @@ GHT.addToggleableComments = function () {
 GHT.addPullInfoLinks = function () {
   var i = 0;
   jQuery('.pull-info').not('.GHT').each(function () {
-    var $item = jQuery(this);
-    var link = $item.closest('.details').siblings('.title').find('a[data-ga-click*="target:pull"]').attr('href') + '/files';
+    var $info_item = jQuery(this);
+    var link = $info_item.closest('.details').siblings('.title').find('a[data-ga-click*="target:pull"]').attr('href') + '/files';
 
-    $item.replaceWith(
+    $info_item.replaceWith(
       $('<a/>', {
         'class' : 'pull-info GHT',
         'href'  : link,
-        'html'  : $item.html()
+        'html'  : $info_item.html()
       })
     );
     i++;
@@ -239,14 +240,14 @@ GHT.Observer = {
 /**
  * Show / Hide / Toggle helper.
  *
- * @param {jQuery}            $s Object(s) to modify.
- * @param {Boolean|undefined} s  State to set to (true=show, false=hide, undefined=toggle).
+ * @param {jQuery}            $objects Object(s) to modify.
+ * @param {Boolean|undefined} state    State to set to (true=show, false=hide, undefined=toggle).
  */
-GHT.sht = function($s, s) {
-  switch(s) {
-    case true:  $s.show(); break;
-    case false: $s.hide(); break;
-    default:    $s.toggle();
+GHT.toggleShowHide = function($objects, state) {
+  switch(state) {
+    case true:  $objects.show(); break;
+    case false: $objects.hide(); break;
+    default:    $objects.toggle();
   }
 };
 

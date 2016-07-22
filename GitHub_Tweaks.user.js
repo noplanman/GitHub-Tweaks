@@ -3,7 +3,7 @@
 // @namespace   noplanman
 // @description Userscript that adds tweaks to GitHub.
 // @include     https://github.com*
-// @version     2.4.1
+// @version     2.5
 // @author      Armando Lüscher
 // @oujs:author noplanman
 // @copyright   2016 Armando Lüscher
@@ -65,6 +65,7 @@ GHT.addToggleableFileDiffs = function () {
   var $fhs = jQuery('#files.diff-view .file-header').not('.GHT');
   $fhs.each(function () {
     var $f = jQuery(this).addClass('GHT');
+    $f.next().addClass('foldable-file-diff');
 
     // When clicking the file actions, don't toggle the file contents.
     $f.find('.file-actions').click(function(event) {
@@ -87,7 +88,7 @@ GHT.addToggleableFileDiffs = function () {
       '#toc .btn-group.right'                                // ...to commit toolbar.
     )
       .first()
-      .after(GHT.getFoldUnfoldButtons($fhs.next(), 'diffbar-item right', 's'));
+      .after(GHT.getFoldUnfoldButtons('.foldable-file-diff', 'diffbar-item right', 's'));
   }
 };
 
@@ -99,6 +100,7 @@ GHT.addToggleableComments = function () {
   var $chs = jQuery('.timeline-comment-header').not('.GHT');
   $chs.each(function () {
     var $f = jQuery(this).addClass('GHT');
+    $f.next().addClass('foldable-comment');
 
     // When clicking the comment header links, don't toggle the comment contents.
     $f.find('.timeline-comment-header-text a').click(function(event) {
@@ -139,7 +141,7 @@ GHT.addToggleableComments = function () {
   if (!jQuery('.GHT.btn-group').length) {
     jQuery('.timeline-comment-actions')
       .first()
-      .prepend(GHT.getFoldUnfoldButtons($chs.nextAll(), '', 'n'));
+      .prepend(GHT.getFoldUnfoldButtons('.foldable-comment, .comment-reactions', '', 'n'));
   }
 };
 
@@ -282,46 +284,46 @@ GHT.tooltipify = function($items, ttdir, title) {
 /**
  * Get a container with both the fold and unfold buttons.
  *
- * @param {jQuery} $items  Items to fold / unfold.
- * @param {String} classes Class(es) to add to the container.
- * @param {String} ttdir   Direction of the tooptip.
+ * @param {String} selector Selector for items to fold / unfold.
+ * @param {String} classes  Class(es) to add to the container.
+ * @param {String} ttdir    Direction of the tooptip.
  *
  * @return {jQuery} Buttons container.
  */
-GHT.getFoldUnfoldButtons = function($items, classes, ttdir) {
+GHT.getFoldUnfoldButtons = function(selector, classes, ttdir) {
   ttdir = ttdir ? ('tooltipped-' + ttdir) : '';
   return jQuery('<div/>', {class: 'GHT btn-group'})
     .addClass(classes || '')
     .append(
-      GHT.getFoldButton($items).addClass(ttdir),
-      GHT.getUnfoldButton($items).addClass(ttdir)
+      GHT.getFoldButton(selector).addClass(ttdir),
+      GHT.getUnfoldButton(selector).addClass(ttdir)
     );
 };
 
 /**
  * Get fold button.
  *
- * @param {jQuery} $items Items to fold.
+ * @param {String} selector Selector for items to fold / unfold.
  *
  * @return {jQuery} The fold button.
  */
-GHT.getFoldButton = function($items) {
+GHT.getFoldButton = function(selector) {
   return jQuery('<div/>', {html: GHT.getOcticon('fold'), class: 'btn btn-sm tooltipped'})
     .attr('aria-label', 'Collapse All')
-    .click(function() { $items.hide(); });
+    .click(function() { jQuery(selector).hide(); });
 };
 
 /**
  * Get unfold button.
  *
- * @param {jQuery} $items Items to unfold.
+ * @param {String} selector Selector for items to fold / unfold.
  *
  * @return {jQuery} The unfold button.
  */
-GHT.getUnfoldButton = function($items) {
+GHT.getUnfoldButton = function(selector) {
   return jQuery('<div/>', {html: GHT.getOcticon('unfold'), class: 'btn btn-sm tooltipped'})
     .attr('aria-label', 'Expand All')
-    .click(function() { $items.show(); });
+    .click(function() { jQuery(selector).show(); });
 };
 
 /**

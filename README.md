@@ -57,6 +57,10 @@ For hidden comments, the first part of the content gets added to the comment hea
 
 ##Changelog
 
+###2.5
+
+- Make fold/unfold toggles react to specific selectors instead of elements. This means that newly added comments also get toggled correctly.
+
 ###2.4.1
 
 - Fix for class rename on GitHub.

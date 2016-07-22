@@ -243,14 +243,10 @@ GHT.Observer = {
  * @param {Boolean|undefined} s  State to set to (true=show, false=hide, undefined=toggle).
  */
 GHT.sht = function($s, s) {
-  if (typeof s === 'undefined') {
-    $s.toggle();
-  } else {
-    if (s) {
-      $s.show();
-    } else {
-      $s.hide();
-    }
+  switch(s) {
+    case true:  $s.show(); break;
+    case false: $s.hide(); break;
+    default:    $s.toggle();
   }
 };
 

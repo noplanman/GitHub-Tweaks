@@ -106,7 +106,7 @@ GHT.addToggleableFileDiffs = function () {
 
     if (has_tfd && !jQuery('.GHT-btn-group').length) {
         // Add collapse / expand buttons...
-        var $folding_buttons = GHT.getFoldUnfoldButtons('.foldable-file-diff', 'diffbar-item', 's');
+        var $folding_buttons = GHT.getFoldUnfoldButtons('tfd', '.foldable-file-diff', 'diffbar-item', 's');
 
         // ...to PR toolbar.
         if ($pr_toolbar.length) {
@@ -164,7 +164,6 @@ GHT.addToggleableComments = function () {
         i++;
     });
 
-
     GHT.addClickEvent('tc', '.timeline-comment-header', function (event) {
         var $comment_header = jQuery(this);
         var $target = jQuery(event.target);
@@ -181,13 +180,14 @@ GHT.addToggleableComments = function () {
         }
     });
 
-
     GHT.debug && console.log('addToggleableComments: ' + i);
 
     if (!jQuery('.GHT-btn-group').length) {
+        var $folding_buttons = GHT.getFoldUnfoldButtons('tc', '.foldable-comment, .comment-reactions', '', 'n');
+
         jQuery('.timeline-comment-actions')
             .first()
-            .prepend(GHT.getFoldUnfoldButtons('.foldable-comment, .comment-reactions', '', 'n'));
+            .prepend($folding_buttons);
     }
 };
 
@@ -225,8 +225,19 @@ GHT.init = function () {
         '.GHT.user-select-contain { cursor: pointer !important; }'
     );
 
+    featureFunctions = [
+        GHT.addCommitRefLinks,
+        GHT.addToggleableFileDiffs,
+        GHT.addToggleableComments,
+        GHT.addPullInfoLinks
+    ];
+
+    featureFunctions.forEach(function(ff) {
+        ff();
+    });
+
     // Load all the features.
-    GHT.Observer.add('body', [GHT.addCommitRefLinks, GHT.addToggleableFileDiffs, GHT.addToggleableComments, GHT.addPullInfoLinks]);
+    GHT.Observer.add('body', featureFunctions);
 };
 
 // source: https://muffinresearch.co.uk/does-settimeout-solve-the-domcontentloaded-problem/
@@ -332,16 +343,17 @@ GHT.tooltipify = function ($items, ttdir, title) {
 /**
  * Get a container with both the fold and unfold buttons.
  *
+ * @param {String} fubid    ID of the fold / unfold button group.
  * @param {String} selector Selector for items to fold / unfold.
  * @param {String} classes  Class(es) to add to the container.
  * @param {String} ttdir    Direction of the tooptip.
  *
  * @return {jQuery} Buttons container.
  */
-GHT.getFoldUnfoldButtons = function (selector, classes, ttdir) {
+GHT.getFoldUnfoldButtons = function (fubid, selector, classes, ttdir) {
     ttdir = ttdir ? ('tooltipped-' + ttdir) : '';
 
-    GHT.addClickEvent('fub', '.GHT-btn-group', function (event) {
+    GHT.addClickEvent('GHT-fub-' + fubid, '.GHT-btn-group', function (event) {
         var $target = jQuery(event.target);
         if ($target.closest('.GHT-fold-button').andSelf().hasClass('GHT-fold-button')) {
             jQuery(selector).hide();

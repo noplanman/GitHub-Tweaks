@@ -3,7 +3,7 @@
 // @namespace   noplanman
 // @description Userscript that adds tweaks to GitHub.
 // @include     https://github.com*
-// @version     2.5
+// @version     2.5.1
 // @author      Armando Lüscher
 // @oujs:author noplanman
 // @copyright   2016 Armando Lüscher

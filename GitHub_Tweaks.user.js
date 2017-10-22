@@ -3,10 +3,10 @@
 // @namespace   noplanman
 // @description Userscript that adds tweaks to GitHub.
 // @include     https://github.com*
-// @version     2.5.1
+// @version     2.6
 // @author      Armando Lüscher
 // @oujs:author noplanman
-// @copyright   2016 Armando Lüscher
+// @copyright   2017 Armando Lüscher
 // @grant       GM_addStyle
 // @require     https://code.jquery.com/jquery-1.12.4.min.js
 // @homepageURL https://github.com/noplanman/GitHub-Tweaks
@@ -89,9 +89,13 @@ GHT.addToggleableFileDiffs = function () {
         $file_header.next().addClass('foldable-file-diff');
 
         // When clicking the file actions, don't toggle the file contents.
-        $file_header.find('.file-actions').click(function (event) {
+        var $file_actions = $file_header.find('.file-actions');
+        $file_actions.click(function (event) {
             event.stopPropagation();
         });
+
+        // Delete the default GitHub folding button, which has a different behaviour.
+        $file_actions.find('button.js-details-target').remove();
 
         i++;
     });
@@ -232,7 +236,7 @@ GHT.init = function () {
         GHT.addPullInfoLinks
     ];
 
-    featureFunctions.forEach(function(ff) {
+    featureFunctions.forEach(function (ff) {
         ff();
     });
 

@@ -8,15 +8,15 @@ GitHub Tweaks can be installed on a **PC**, or a **Mac**.
 Simply choose the plugin that corresponds to your web browser below and download the script, as easy as that!
 
 1. Which browser?
-  - **Firefox**: Install the [GreaseMonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) plugin.
-  - **Chrome**: Install the [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) plugin.
-  - **Opera**: Install the [ViolentMonkey](https://addons.opera.com/en/extensions/details/violent-monkey/) extension.
+  - **Firefox**: Install the [GreaseMonkey] plugin.
+  - **Chrome**: Install the [Tampermonkey] plugin.
+  - **Opera**: Install the [ViolentMonkey] extension.
   - **Safari** & **Internet Explorer**: *NOT SUPPORTED!*
 
 2. GitHub Tweaks script can be found here (just choose any one)
-  - [Get it on OpenUserJS.org](https://openuserjs.org/install/noplanman/GitHub_Tweaks.user.js)
-  - [Get it on GreasyFork](https://greasyfork.org/en/scripts/20340-github-tweaks/code/GitHub_Tweaks.user.js)
-  - [Get it on GitHub](https://raw.githubusercontent.com/noplanman/GitHub-Tweaks/master/GitHub_Tweaks.user.js)
+  - [Get it on OpenUserJS.org]
+  - [Get it on GreasyFork]
+  - [Get it on GitHub]
 
 ## Details
 
@@ -56,6 +56,10 @@ For hidden comments, the first part of the content gets added to the comment hea
 ![Toggleable Comments](assets/ToggleableComments.png)
 
 ## Changelog
+
+### 2.6
+
+- Remove built-in GitHub file collapse toggle, due to a very different approach of showing/hiding content.
 
 ### 2.5.1
 
@@ -100,3 +104,10 @@ For hidden comments, the first part of the content gets added to the comment hea
 ### 1.0
 
 - First version, adding Commit Ref Links and Toggleable File Diffs.
+
+[GreaseMonkey]: https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/ "GreaseMonkey for Firefox"
+[Tampermonkey]: https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en "Tampermonkey for Chrome"
+[ViolentMonkey]: https://addons.opera.com/en/extensions/details/violent-monkey/ "ViolentMonkey for Opera"
+[Get it on OpenUserJS.org]: https://openuserjs.org/install/noplanman/GitHub_Tweaks.user.js "OpenUserJS.org"
+[Get it on GreasyFork]: https://greasyfork.org/en/scripts/20340-github-tweaks/code/GitHub_Tweaks.user.js "GreasyFork"
+[Get it on GitHub]: https://raw.githubusercontent.com/noplanman/GitHub-Tweaks/master/GitHub_Tweaks.user.js "GitHub"

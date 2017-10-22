@@ -3,7 +3,7 @@
 // @namespace   noplanman
 // @description Userscript that adds tweaks to GitHub.
 // @include     https://github.com*
-// @version     2.6
+// @version     2.6.1
 // @author      Armando Lüscher
 // @oujs:author noplanman
 // @copyright   2017 Armando Lüscher
@@ -217,6 +217,30 @@ GHT.addPullInfoLinks = function () {
 };
 
 /**
+ * Add a permalink for the current page to the user links at the top right.
+ */
+GHT.addPagePermalink = function () {
+    if ($('#GHT-permalink').length) {
+        return;
+    }
+
+    var permalink = $('.js-permalink-shortcut').attr('href') || location.href;
+
+    var $permalink = $('<a/>', {
+        'id': 'GHT-permalink',
+        'href': permalink,
+        'html': GHT.getOcticon('link')
+    });
+
+    GHT.tooltipify($permalink, 's', 'Permalink');
+
+    $('<li/>').append($('<span/>', {
+        'class': 'd-inline-block px-2',
+        'html': $permalink,
+    })).prependTo('#user-links');
+}
+
+/**
  * Start the party.
  */
 GHT.init = function () {
@@ -224,10 +248,13 @@ GHT.init = function () {
 
     // Add the global CSS rules.
     GM_addStyle(
+        '#GHT-permalink { color: rgba(255,255,255,0.75); }' +
         '.GHT-btn-group { display: inline-block; }' +
         '.GHT.commit-ref:hover, .GHT.pull-info:hover { background-color: rgba(0,0,0,.1); background-image: none; text-shadow: none; cursor: pointer; text-decoration: none; }' +
         '.GHT.user-select-contain { cursor: pointer !important; }'
     );
+
+    GHT.addPagePermalink();
 
     featureFunctions = [
         GHT.addCommitRefLinks,
@@ -357,7 +384,7 @@ GHT.tooltipify = function ($items, ttdir, title) {
 GHT.getFoldUnfoldButtons = function (fubid, selector, classes, ttdir) {
     ttdir = ttdir ? ('tooltipped-' + ttdir) : '';
 
-    GHT.addClickEvent('GHT-fub-' + fubid, '.GHT-btn-group', function (event) {
+    GHT.addClickEvent('fub-' + fubid, '.GHT-btn-group', function (event) {
         var $target = jQuery(event.target);
         if ($target.closest('.GHT-fold-button').andSelf().hasClass('GHT-fold-button')) {
             jQuery(selector).hide();

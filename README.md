@@ -55,7 +55,17 @@ For hidden comments, the first part of the content gets added to the comment hea
 
 ![Toggleable Comments](assets/ToggleableComments.png)
 
+### Permalink to current page
+
+A link with the permalink to the current page gets added to the top right into the user links.
+
+![Permalink](assets/Permalink.png)
+
 ## Changelog
+
+### 2.6.1
+
+- Add permalink of the current page to user links.
 
 ### 2.6
 

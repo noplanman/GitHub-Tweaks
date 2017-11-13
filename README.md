@@ -63,6 +63,10 @@ A link with the permalink to the current page gets added to the top right into t
 
 ## Changelog
 
+### 2.7
+
+- Add fold/unfold buttons when viewing a single commit.
+
 ### 2.6.1
 
 - Add permalink of the current page to user links.
@@ -73,11 +77,11 @@ A link with the permalink to the current page gets added to the top right into t
 
 ### 2.5.1
 
-- Fix Fold-Unfold buttons to work correctly even after changing tabs in PR view.
+- Fix fold/unfold buttons to work correctly even after changing tabs in PR view.
 
 ### 2.5
 
-- Make fold/unfold toggles react to specific selectors instead of elements. This means that newly added comments also get toggled correctly.
+- Make fold/unfold buttons react to specific selectors instead of elements. This means that newly added comments also get toggled correctly.
 
 ### 2.4.1
 

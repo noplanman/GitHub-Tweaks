@@ -3,7 +3,7 @@
 // @namespace   noplanman
 // @description Userscript that adds tweaks to GitHub.
 // @include     https://github.com*
-// @version     2.6.1
+// @version     2.7
 // @author      Armando Lüscher
 // @oujs:author noplanman
 // @copyright   2017 Armando Lüscher
@@ -80,8 +80,8 @@ GHT.addToggleableFileDiffs = function () {
     // Get all the possible toolbars, to check which one we're using on this page.
     var $compare_toolbar = jQuery('#files_bucket #diff .BtnGroup.float-right');
     var $pr_toolbar = jQuery('#files_bucket .pr-toolbar .diffbar .pr-review-tools');
-    var has_tfd = $compare_toolbar.length || $pr_toolbar.length;
-    //var $commit_toolbar = jQuery('#toc .btn-group.right');
+    var $commit_toolbar = jQuery('#toc .BtnGroup.float-right');
+    var has_tfd = $compare_toolbar.length || $pr_toolbar.length || $commit_toolbar.length;
 
     var $file_headers = jQuery('#files.diff-view .file-header').not('.GHT');
     $file_headers.each(function () {
@@ -124,10 +124,10 @@ GHT.addToggleableFileDiffs = function () {
         }
 
         // ...to commit toolbar.
-        /*if ($commit_toolbar.length) {
-         $folding_buttons.addClass('float-right');
-         $commit_toolbar.after($folding_buttons);
-         }*/
+        if ($commit_toolbar.length) {
+            $folding_buttons.addClass('float-right');
+            $commit_toolbar.after($folding_buttons);
+        }
     }
 };
 

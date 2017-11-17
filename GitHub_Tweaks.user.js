@@ -149,17 +149,18 @@ GHT.addToggleableComments = function () {
         // Set the mouse hover title of the header to the comment body to easily browse folded comments.
         var content = $comment_header.next('.edit-comment-hide').find('.comment-body').text().trim();
         var content_slice = content.slice(0, 111);
-        GHT.tooltipify($comment_header, 's', content_slice + ((content > content_slice) ? '...' : ''));
+        var $comment_header_text = $comment_header.find('.timeline-comment-header-text');
+        GHT.tooltipify($comment_header_text, 's', content_slice + ((content > content_slice) ? '...' : ''));
         // Don't show tooltip yet, only when content is hidden!
-        $comment_header.removeClass('tooltipped');
+        $comment_header_text.removeClass('tooltipped');
 
         // Show/hide the content tooltip in the header.
         $comment_header.next('.edit-comment-hide')
             .on('show', function () {
-                $comment_header.removeClass('tooltipped');
+                $comment_header_text.removeClass('tooltipped');
             })
             .on('hide', function () {
-                $comment_header.addClass('tooltipped');
+                $comment_header_text.addClass('tooltipped');
             });
 
         // Add north-oriented tooltips to all reaction buttons.

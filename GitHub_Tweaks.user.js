@@ -13,6 +13,9 @@
 // @supportURL  https://github.com/noplanman/GitHub-Tweaks/issues
 // ==/UserScript==
 
+(function (jQuery) {
+"use strict";
+
 /**
  * Main GitHub Tweaks object.
  *
@@ -259,7 +262,7 @@ GHT.init = function () {
 
     GHT.addPagePermalink();
 
-    featureFunctions = [
+    var featureFunctions = [
         GHT.addCommitRefLinks,
         GHT.addToggleableFileDiffs,
         GHT.addToggleableComments,
@@ -273,13 +276,6 @@ GHT.init = function () {
     // Load all the features.
     GHT.Observer.add('body', featureFunctions);
 };
-
-// source: https://muffinresearch.co.uk/does-settimeout-solve-the-domcontentloaded-problem/
-if (/(?!.*?compatible|.*?webkit)^mozilla|opera/i.test(navigator.userAgent)) { // Feeling dirty yet?
-    document.addEventListener('DOMContentLoaded', GHT.init, false);
-} else {
-    window.setTimeout(GHT.init, 0);
-}
 
 /************
  * HELPERS! *
@@ -1093,3 +1089,8 @@ GHT.initCustomTriggers = function () {
         };
     });
 };
+
+// Get the show on the road!
+GHT.init();
+
+})(jQuery);

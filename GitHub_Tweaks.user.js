@@ -189,6 +189,8 @@ GHT.addToggleableComments = function () {
 
     if (!jQuery('.GHT-btn-group').length) {
         var $folding_buttons = GHT.getFoldUnfoldButtons('tc', '.foldable-comment, .comment-reactions', '', 'n');
+        // Fix for non logged-in users, as there are no other actions that fix the positioning.
+        $folding_buttons.css('padding', '8px 5px');
 
         jQuery('.timeline-comment-actions')
             .first()

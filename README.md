@@ -63,6 +63,11 @@ A link with the permalink to the current page gets added to the top right into t
 
 ## Changelog
 
+### 2.8
+
+- Improve userscript initialisation.
+- Fix tooltip for folded comments. Error was due to clearfix added by GitHub.
+
 ### 2.7
 
 - Add fold/unfold buttons when viewing a single commit.

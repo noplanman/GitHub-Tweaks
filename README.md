@@ -70,7 +70,7 @@ On the dashboard, the pull info fields are now linked to the PR's "Files changed
 
 ## Changelog
 
-### Unreleased
+### 2.9.0
 
 - Remove Commit Ref Links which have been implemented by GitHub directly.
 - Remove Pull Info Links which are obsolete since GitHub's new dashboard.

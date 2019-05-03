@@ -3,10 +3,10 @@
 // @namespace   noplanman
 // @description Userscript that adds tweaks to GitHub.
 // @include     https://github.com*
-// @version     2.8
+// @version     2.9.0
 // @author      Armando Lüscher
 // @oujs:author noplanman
-// @copyright   2017 Armando Lüscher
+// @copyright   2019 Armando Lüscher
 // @grant       GM_addStyle
 // @require     https://code.jquery.com/jquery-1.12.4.min.js
 // @homepageURL https://github.com/noplanman/GitHub-Tweaks

@@ -31,36 +31,6 @@
     GHT.debug = false;
 
     /**
-     * Turn commit references into links for easier access.
-     *
-     * e.g. <user1> wants to merge 1 commit into <user2>:develop from <user1>:branch
-     * Turn "<user2>:develop" and "<user1>:branch" into links.
-     */
-    GHT.addCommitRefLinks = function () {
-        var i = 0;
-        var s = 0;
-        jQuery('.commit-ref').not('.GHT').each(function () {
-            var $item = jQuery(this);
-            // Fix for commit-ref fields that are formatted differently (e.g. merged PR, at the bottom).
-            var $info = $item.find('.css-truncate-target').parent();
-            if ($info.length) {
-                $item.replaceWith(
-                    $('<a/>', {
-                        'class': 'GHT ' + ($info.attr('class') || 'commit-ref current-branch css-truncate user-select-contain expandable'),
-                        'href': '/' + $info.attr('title').replace(':', '/tree/'),
-                        'title': $info.attr('title'),
-                        'html': $info.html()
-                    })
-                );
-            } else {
-                s++;
-            }
-            i++;
-        });
-        GHT.debug && console.log('addCommitRefLinks: ' + i + ' (' + s + ' skipped)');
-    };
-
-    /**
      * Add a click event to the body tag.
      *
      * @param id
@@ -202,27 +172,6 @@
     };
 
     /**
-     * Turn pull info labels on the dashboard into links that link to the PR files tab.
-     */
-    GHT.addPullInfoLinks = function () {
-        var i = 0;
-        jQuery('.pull-info').not('.GHT').each(function () {
-            var $info_item = jQuery(this);
-            var link = $info_item.closest('.details').siblings('.title').find('a[data-ga-click*="target:pull"]').attr('href') + '/files';
-
-            $info_item.replaceWith(
-                $('<a/>', {
-                    'class': 'pull-info GHT',
-                    'href': link,
-                    'html': $info_item.html()
-                })
-            );
-            i++;
-        });
-        GHT.debug && console.log('addPullInfoLinks: ' + i);
-    };
-
-    /**
      * Add a permalink for the current page to the user links at the top right.
      */
     GHT.addPagePermalink = function () {
@@ -256,17 +205,14 @@
         GM_addStyle(
             '#GHT-permalink { color: rgba(255,255,255,0.75); }' +
             '.GHT-btn-group { display: inline-block; }' +
-            '.GHT.commit-ref:hover, .GHT.pull-info:hover { background-color: rgba(0,0,0,.1); background-image: none; text-shadow: none; cursor: pointer; text-decoration: none; }' +
             '.GHT.user-select-contain { cursor: pointer !important; }'
         );
 
         GHT.addPagePermalink();
 
         var featureFunctions = [
-            GHT.addCommitRefLinks,
             GHT.addToggleableFileDiffs,
-            GHT.addToggleableComments,
-            GHT.addPullInfoLinks
+            GHT.addToggleableComments
         ];
 
         featureFunctions.forEach(function (ff) {

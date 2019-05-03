@@ -22,24 +22,6 @@ Simply choose the plugin that corresponds to your web browser below and download
 
 Here's what this script does for you / adds to the GitHub website.
 
-### Commit Ref Links
-
-When viewing a PR, there is a short summary text similar to this at the top:
-
-- **user2** wants to merge 8 commits into `user1:master` from `user2:branch`
-
-The `user1:master` and `user2:branch` placeholders are now links to the respective branches.
-
-(this applies to all `user:branch` placeholders wherever they appear)
-
-![Commit Ref Links](assets/CommitRefLinks.png)
-
-### Pull Info Links
-
-On the dashboard, the pull info fields are now linked to the PR's "Files changed" tab for quick access.
-
-![Pull Info Links](assets/PullInfoLinks.png)
-
 ### Toggleable File Diffs
 
 When viewing the changed files of a PR, branch comparison or a single commit, you can now collapse and expand the files by clicking the individual file headers.
@@ -61,7 +43,37 @@ A link with the permalink to the current page gets added to the top right into t
 
 ![Permalink](assets/Permalink.png)
 
+## Implemented by GitHub
+
+### Commit Ref Links
+
+When viewing a PR, there is a short summary text similar to this at the top:
+
+- **user2** wants to merge 8 commits into `user1:master` from `user2:branch`
+
+The `user1:master` and `user2:branch` placeholders are now links to the respective branches.
+
+(this applies to all `user:branch` placeholders wherever they appear)
+
+![Commit Ref Links](assets/CommitRefLinks.png)
+
+## Obsolete and removed
+
+Here are features that don't apply anymore, due to GitHub changes.
+
+### Pull Info Links
+
+On the dashboard, the pull info fields are now linked to the PR's "Files changed" tab for quick access.
+
+![Pull Info Links](assets/PullInfoLinks.png)
+
+
 ## Changelog
+
+### Unreleased
+
+- Remove Commit Ref Links which have been implemented by GitHub directly.
+- Remove Pull Info Links which are obsolete since GitHub's new dashboard.
 
 ### 2.8
 

@@ -191,9 +191,9 @@
 
         $('<li/>').append($('<span/>', {
             'class': 'd-inline-block px-2',
-            'html': $permalink,
+            'html': $permalink
         })).prependTo('#user-links');
-    }
+    };
 
     /**
      * Start the party.
@@ -1018,7 +1018,7 @@
             'viewbox': '0 0 12 16',
             'path': '<path d="M7.48 8l3.75 3.75-1.48 1.48L6 9.48l-3.75 3.75-1.48-1.48L4.52 8 .77 4.25l1.48-1.48L6 6.52l3.75-3.75 1.48 1.48z" fill-rule="evenodd"/>'
         },
-        'zap': {'viewbox': '0 0 10 16', 'path': '<path d="M10 7H6l3-7-9 9h4l-3 7z" fill-rule="evenodd"/>'},
+        'zap': {'viewbox': '0 0 10 16', 'path': '<path d="M10 7H6l3-7-9 9h4l-3 7z" fill-rule="evenodd"/>'}
     };
 
     /**

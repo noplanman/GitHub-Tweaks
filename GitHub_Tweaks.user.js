@@ -175,24 +175,29 @@
      * Add a permalink for the current page to the user links at the top right.
      */
     GHT.addPagePermalink = function () {
-        if ($('#GHT-permalink').length) {
+        var $permalink = $('#GHT-permalink');
+        var permalink = $('.js-permalink-shortcut').attr('href') || location.href;
+
+        if ($permalink.length) {
+            $permalink.attr('href', permalink);
             return;
         }
 
-        var permalink = $('.js-permalink-shortcut').attr('href') || location.href;
-
-        var $permalink = $('<a/>', {
+        $permalink = $('<a/>', {
             'id': 'GHT-permalink',
             'href': permalink,
+            'class': 'Header-link',
             'html': GHT.getOcticon('link')
         });
 
         GHT.tooltipify($permalink, 's', 'Permalink');
 
-        $('<li/>').append($('<span/>', {
-            'class': 'd-inline-block px-2',
-            'html': $permalink
-        })).prependTo('#user-links');
+        $('.notification-indicator').parent().before(
+            $('<div/>', {
+                'class': 'Header-item position-relative',
+                'html': $permalink
+            })
+        );
     };
 
     /**
@@ -203,14 +208,13 @@
 
         // Add the global CSS rules.
         GM_addStyle(
-            '#GHT-permalink { color: rgba(255,255,255,0.75); }' +
             '.GHT-btn-group { display: inline-block; }' +
             '.GHT.user-select-contain { cursor: pointer !important; }'
         );
 
-        GHT.addPagePermalink();
 
         var featureFunctions = [
+            GHT.addPagePermalink,
             GHT.addToggleableFileDiffs,
             GHT.addToggleableComments
         ];

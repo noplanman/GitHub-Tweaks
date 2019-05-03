@@ -74,6 +74,7 @@ On the dashboard, the pull info fields are now linked to the PR's "Files changed
 
 - Remove Commit Ref Links which have been implemented by GitHub directly.
 - Remove Pull Info Links which are obsolete since GitHub's new dashboard.
+- Fix permalink link next to the user links at the top right.
 
 ### 2.8
 
